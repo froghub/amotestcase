@@ -28,6 +28,8 @@ class HookProcess
             Logger::log("Данное действие не обрабатывается (Действие: $action)");
             return;
         }
+        Logger::log("Incoming hook Entity: $entity, action: $action");
+        Logger::log(var_export($_POST, true));
 
         $this->handleHook($entity, $action, $dataRaw);
     }
@@ -49,18 +51,28 @@ class HookProcess
                         break;
                     }
                 case 'update': {
-                        Logger::log('Update entity '.$entity.', ID:' . $item['id']);
-                        break; //добавление note тоже вызывает update. Для начала отфильтровать
-                        $noteText = "Изменения полей: ";
+                        Logger::log('Update entity ' . $entity . ', ID:' . $item['id']);
+                        $noteText = 'Изменение ' . ($entity == 'leads' ? 'сделки' : 'контакта');
 
-                        //Запросить события.в хуке нет инфы по изменениям
-                        if(isset($item['custom_fields'])){
-                            foreach ($item['custom_fields'] as $field) {
-                                $noteText .= $field['name'] . ' присвоено ' . $field['values'][0]['value'] . ', ';
+                        /* нет информации по изменении стандартных полей в хуке. Нет информации о событии для привязки
+                        $fields = array_keys($item);
+                        foreach ($fields as $field) {
+                            if (substr($field, 0, 3) === 'old' && isset($item[substr($field, 4)])) {
+                                $fieldsText .= substr($field, 4) . ' присвоено ' . $item[substr($field, 4)];
                             }
-                        }
+                        }*/
+                        if (isset($item['custom_fields'])) {
+                            $fieldsText = " Изменения полей: ";
 
-                        $noteText .=  "Изменено: " . date('H:i:s d.m.Y', $item['updated_at']);;
+                            foreach ($item['custom_fields'] as $field) {
+                                $fieldsText .= $field['name'] . ' присвоено ' . $field['values'][0]['value'] . ', ';
+                            }
+
+                            $noteText .= $fieldsText;
+                        }
+                        $noteText .=  " Изменено: " . date('H:i:s d.m.Y', $item['updated_at']);
+
+                        //$noteText .=  " Изменено: " . date('H:i:s d.m.Y', $item['updated_at']);
                         $this->addNote($entity, $item['id'], $item['created_user_id'], $noteText);
                         break;
                     }

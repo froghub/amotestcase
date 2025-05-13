@@ -3,7 +3,12 @@
 
 
 
-GET https://anvlbo.amocrm.ru/api/v4/events?filter[created_at][from]=1747109579&filter[created_at][to]=1747109580
+GET https://anvlbo.amocrm.ru/api/v4/events?filter[entity]=contact&filter[entity_id]=69748325&filter[created_at]=1747145067&with=catalog_element_name
+Authorization: Bearer {{accessToken}}
+
+###
+
+GET https://anvlbo.amocrm.ru/api/v4/events
 Authorization: Bearer {{accessToken}}
 
 ###
@@ -28,3 +33,11 @@ Content-Type: application/json
   "params" : {
     "text" : "Название сделки: lead test 3, Ответственный: Антон, Создано: 16:40:24 13.05.2025"
   }}]
+
+###
+GET https://anvlbo.amocrm.ru/api/v4/leads/custom_fields
+Authorization: Bearer {{accessToken}}
+
+###
+GET https://anvlbo.amocrm.ru/api/v4/contacts/custom_fields
+Authorization: Bearer {{accessToken}}
