@@ -59,7 +59,8 @@ class Api
     public function post($query, $data)
     {
         Logger::log('POST query: ' . $query);
-        Logger::log('DATA : ' . var_export($data, true));
+        Logger::log('DATA : ');
+        Logger::log($data);
         $url = BASE_API_URL . $query;
         $headers = [
             'Content-Type: application/json'
@@ -107,7 +108,7 @@ class Api
         $result = $this->post($url, $payload);
         $result = json_decode($result, true);
         if (!$result || json_last_error() !== JSON_ERROR_NONE) {
-            Logger::log('Auth result error ' . $result . PHP_EOL);
+            Logger::log('Auth result error ' . $result);
             return;
         }
         $result['client_id'] = $_GET['client_id'];

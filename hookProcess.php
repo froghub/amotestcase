@@ -43,7 +43,8 @@ class HookProcess
                 case 'add': {
                         $responsible =  $this->getResponsible($item['responsible_user_id']);
                         if (empty($responsible)) {
-                            Logger::log('Action processing error . Response: ' . var_export($item, true) . PHP_EOL);
+                            Logger::log('Action processing error . Response: ');
+                            Logger::log($item);
                             return;
                         }
                         $noteText = "Название " . ($entity == 'leads' ? 'сделки' : 'контакта') . ": " . $item['name'] . ", Ответственный: " . $responsible['name'] . ", Создано: " . date('H:i:s d.m.Y', $item['created_at']);
@@ -86,7 +87,8 @@ class HookProcess
         $data = $this->api->get("api/v4/users/$id");
         $data = json_decode($data, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            Logger::log('Responsible get error. Response: ' . var_export($data, true) . PHP_EOL);
+            Logger::log('Responsible get error. Response: ');
+            Logger::log($data);
             $data = [];
         }
         return $data;
